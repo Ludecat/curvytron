@@ -70,12 +70,8 @@
                                 class="form-control player-team-tag"
                                 name="teamTag"
                                 placeholder="TEAM"
+                                ng-options="item as item for item in teams track by item"
                             >
-                                <option>BM</option>
-                                <option>SHITS</option>
-                                <option>GONE</option>
-                                <option>RIP</option>
-                                <option>F</option>
                             </select>
                         </td>
                         <td class="col-player">
@@ -85,7 +81,7 @@
                             <input type="text" ng-model="player.teamName" ng-blur="setTeam(player)" class="form-control control" name="teamName" maxlength="{{ ::teamMaxLength }}" />
                         </td>
                         <td class="col-color">
-                            <input type="text" colorpicker="hex" colorpicker-position="right" ng-model="player.color" ng-blur="setColor(player)" class="form-control player-color" name="color" placeholder="#CCCCCC" style="border-color: {{ player.color }};" maxlength="{{ ::colorMaxLength }}" />
+                            <span class="line-color-preview" style="background-color: {{ player.color }};"></span>
                         </td>
                         <td class="col-keys">
                             <button class="btn btn-default control"
@@ -126,7 +122,6 @@
                         </td>
                         <td class="col-color">
                             <span class="line-color-preview" style="background-color: {{ player.color }};"></span>
-                            <p>{{ player.color }}</p>
                         </td>
                         <td class="col-keys"></td>
                         <td class="col-ready">

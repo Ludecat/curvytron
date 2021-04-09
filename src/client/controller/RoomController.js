@@ -10,7 +10,7 @@
  * @param {Chat} chat
  * @param {Notifier} notifier
  */
-function RoomController($scope, $routeParams, $location, client, repository, profile, chat, notifier)
+function RoomController($scope, $http, $routeParams, $location, client, repository, profile, chat, notifier)
 {
     AbstractController.call(this, $scope);
 
@@ -31,6 +31,83 @@ function RoomController($scope, $routeParams, $location, client, repository, pro
     this.controlSynchro = false;
     this.useTouch       = false;
     this.launchInterval = null;
+
+    
+    var that = this;
+    $http.get('teams.json').then(
+        function(result)
+        {
+            var teamTags = result.data.map(function(x) { return x.tag });
+            that.teams = teamTags;
+            that.$scope.teams = teamTags;
+
+
+            
+            that.teamColors = generateTeamColors(that.teams.length);
+            that.teamColorsDictionary = createTeamColorDictionary();
+
+            function generateTeamColors(n) {
+                var colors = [];
+                var hueValues = [0, 90, 168,  194, 30, 210, 42, 235, 70, 280,180, 295, 325, 51, 152]
+                var nrOfHues = hueValues.length;
+                var lightnessValues = [50, 85, 30, 70, 45]
+            
+                var nrOfRounds = Math.ceil(n / nrOfHues);
+                for (let i = 0; i < nrOfRounds; i++) {
+                for (let j = 0; j < nrOfHues; j++) {
+                    colors.push(
+                    hslToHex(hueValues[j], 100, lightnessValues[i])  //(i + 1) * (100 / nrOfRounds)
+                    ); //only 340 hue to avoid having red twice
+                }
+                }
+            
+                // // view colors
+                // console.log(colors)
+                // colors.forEach(color => {
+                //   // var body = document.querySelector("body")
+                //   var div = document.createElement("div")
+                //   div.style.width = "200px"
+                //   div.style.height = "5px"
+                //   div.style.backgroundColor = color
+                //   document.body.appendChild(div)
+                // })
+                return colors;
+            }
+
+            function randomNr(min, max) {
+                return min + Math.random() * (max - min);
+            }
+            
+            //hslToHex src: https://stackoverflow.com/a/44134328
+            function hslToHex(h, s, l) {
+                l /= 100;
+                var a = s * Math.min(l, 1 - l) / 100;
+                var f = n => {
+                var k = (n + h / 30) % 12;
+                var color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+                return Math.round(255 * color).toString(16).padStart(2, '0');   // convert to Hex and prefix "0" if needed
+                };
+                return `#${f(0)}${f(8)}${f(4)}`;
+            }
+            
+
+            function createTeamColorDictionary(){
+                var dictionary = {}
+                let counter = 0
+                that.teams.forEach(team => {
+                dictionary[team] = that.teamColors[counter]
+                counter++
+                })
+            
+                return {...dictionary}
+            }
+        },
+        function()
+        {
+
+        }
+    );
+
 
     // Binding:
     this.addPlayer        = this.addPlayer.bind(this);
@@ -419,6 +496,9 @@ RoomController.prototype.setTeamTag = function(player)
     var controller = this;
 
     console.log(player.teamTag);
+
+    player.color = that.teamColorsDictionary[player.teamTag];
+    this.setColor(player);
 
     this.repository.setTeamTag(
         player.id,

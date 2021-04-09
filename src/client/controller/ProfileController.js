@@ -8,7 +8,7 @@
  * @param {Analyser} analyser
  * @param {ActivityWatcher} watcher
  */
-function ProfileController($scope, profile, radio, sound)
+function ProfileController($scope, $http, profile, radio, sound)
 {
     AbstractController.call(this, $scope);
 
@@ -20,6 +20,21 @@ function ProfileController($scope, profile, radio, sound)
     this.tuto     = null;
     this.panel    = null;
     this.controls = null;
+    this.teams = null;
+    
+    var that = this;
+    $http.get('teams.json').then(
+        function(result)
+        {
+            var teamTags = result.data.map(function(x) { return x.tag });
+            that.teams = teamTags;
+            that.$scope.teams = teamTags;
+        },
+        function()
+        {
+
+        }
+    );
 
     this.profile.controller = this;
 

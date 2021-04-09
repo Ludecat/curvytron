@@ -220,6 +220,11 @@
 
     }
 
+    .col-teamTag
+    {
+        width: 160px;
+    }
+
     .col-color {
         position: relative;
         // padding-left: 20px;
@@ -357,7 +362,7 @@
     }
 
     .col-player { width: auto; }
-    .col-color { width: 150px; }
+    .col-color { width: 0px; }
     .col-keys { width: 250px; }
     .col-ready { width: 150px; }
     .col-remove {

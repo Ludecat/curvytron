@@ -23,7 +23,7 @@ curvytronApp.controller(
 );
 curvytronApp.controller(
     'RoomController',
-    ['$scope', '$routeParams', '$location', 'SocketClient', 'RoomRepository', 'Profile', 'Chat', 'Notifier', RoomController]
+    ['$scope', '$http', '$routeParams', '$location', 'SocketClient', 'RoomRepository', 'Profile', 'Chat', 'Notifier', RoomController]
 );
 curvytronApp.controller(
     'RoomConfigController',
@@ -59,7 +59,7 @@ curvytronApp.controller(
 );
 curvytronApp.controller(
     'ProfileController',
-    ['$scope', 'Profile', 'Radio', 'SoundManager', ProfileController]
+    ['$scope', '$http', 'Profile', 'Radio', 'SoundManager', ProfileController]
 );
 
 curvytronApp.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
